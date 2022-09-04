@@ -6,3 +6,168 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum DocumentType {
+  CC
+  NIT
+}
+
+enum Role {
+  ADMIN
+  CANDIDATE
+}
+
+enum ContractType {
+  UNDEFINED
+  DEFINED
+  PROVISION_SERVICE
+}
+
+enum VacantStatus {
+  PENDING
+  INTERVIEW
+  SEND_DOCUMENTS
+  REVIEW
+  REJECTED
+  APPROVED
+}
+
+enum AttachedType {
+  CANDIDATE
+  BUSINESS
+}
+
+enum InterviewType {
+  PRESENTIAL
+  VIRTUAL
+}
+
+model User {
+  id                  String                @id @default(cuid())
+  email               String                @unique @db.VarChar(100)
+  name                String                @db.VarChar(100)
+  surname             String                @db.VarChar(100)
+  document            String                @db.VarChar(16)
+  document_type       DocumentType          @default(CC)
+  phone               String?               @db.VarChar(14)
+  role                Role                  @default(CANDIDATE)
+  first_login         DateTime?
+  photo_uri           String?
+  interviews          UsersOnInterviews[]
+  vacancies           UsersOnVacancies[]
+  created_at          DateTime?             @default(now())
+  updated_at          DateTime?             @updatedAt
+  Vacant              Vacant[]
+  UserVacantDocuments UserVacantDocuments[]
+  Commentaries         Commentaries[]
+}
+
+model Vacant {
+  id                  String                @id @default(cuid())
+  jobTitle            JobTitle              @relation(fields: [job_title_id], references: [id])
+  job_title_id        String
+  max_candidaties     Int
+  min_salary          Float
+  max_salary          Float
+  init_date           DateTime?
+  contract_type       String?               @db.VarChar(14)
+  createdBy           User?                 @relation(fields: [created_by], references: [id])
+  created_by          String?
+  created_at          DateTime?             @default(now())
+  updated_at          DateTime?             @updatedAt
+  users               UsersOnVacancies[]
+  documents           Document[]
+  UserVacantDocuments UserVacantDocuments[]
+}
+
+model JobTitle {
+  id          String    @id @default(cuid())
+  code        String    @unique @db.VarChar(100)
+  name        String    @db.VarChar(100)
+  description String
+  vacants     Vacant[]
+  created_at  DateTime? @default(now())
+  updated_at  DateTime? @updatedAt
+}
+
+model Document {
+  id                  String                @id @default(cuid())
+  vacant              Vacant                @relation(fields: [vacant_id], references: [id])
+  vacant_id           String
+  type                AttachedType
+  name                String                @db.VarChar(100)
+  description         String
+  created_at          DateTime?             @default(now())
+  updated_at          DateTime?             @updatedAt
+  UserVacantDocuments UserVacantDocuments[]
+}
+
+model UsersOnVacancies {
+  id         String                @id @default(cuid())
+  user       User                  @relation(fields: [user_id], references: [id])
+  user_id    String
+  vacant     Vacant                @relation(fields: [vacant_id], references: [id])
+  vacant_id  String
+  status     VacantStatus          @default(PENDING)
+  documents  UserVacantDocuments[]
+  interviews Interview[]
+  created_at DateTime?             @default(now())
+  updated_at DateTime?             @updatedAt
+
+  @@unique([user_id, vacant_id])
+}
+
+model UserVacantDocuments {
+  id                 String            @id @default(cuid())
+  user               User              @relation(fields: [user_id], references: [id])
+  user_id            String
+  vacant             Vacant            @relation(fields: [vacant_id], references: [id])
+  vacant_id          String
+  document           Document          @relation(fields: [document_id], references: [id])
+  document_id        String
+  uri                String?
+  default_uri        String?
+  created_at         DateTime?         @default(now())
+  updated_at         DateTime?         @updatedAt
+  UsersOnVacancies   UsersOnVacancies? @relation(fields: [usersOnVacanciesId], references: [id])
+  usersOnVacanciesId String?
+
+  @@unique([user_id, vacant_id, document_id])
+}
+
+model Interview {
+  id             String              @id @default(cuid())
+  userVacant     UsersOnVacancies    @relation(fields: [user_vacant_id], references: [id])
+  user_vacant_id String
+  users          UsersOnInterviews[]
+  title          String              @db.VarChar(100)
+  description    String
+  location       String              @db.VarChar(255)
+  type           InterviewType
+  init_date      DateTime
+  final_Date     DateTime
+  created_at     DateTime?           @default(now())
+  updated_at     DateTime?           @updatedAt
+  Commentaries    Commentaries[]
+}
+
+model UsersOnInterviews {
+  id           String    @id @default(cuid())
+  interview    Interview @relation(fields: [interview_id], references: [id])
+  interview_id String
+  user         User      @relation(fields: [user_id], references: [id])
+  user_id      String
+  created_at   DateTime? @default(now())
+  updated_at   DateTime? @updatedAt
+}
+
+model Commentaries {
+  id           String    @id @default(cuid())
+  interview    Interview @relation(fields: [interview_id], references: [id])
+  interview_id String
+  user         User      @relation(fields: [user_id], references: [id])
+  user_id      String
+  value        String    @db.VarChar(255)
+  created_at   DateTime? @default(now())
+  updated_at   DateTime? @updatedAt
+}
