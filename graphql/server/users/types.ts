@@ -7,7 +7,7 @@ const UserTypes = gql`
     name: String
     surname: String
     document: String
-    documentType: String
+    documentType: DocumentType
     phone: String
     role: String
     firstLogin: Date
@@ -19,15 +19,31 @@ const UserTypes = gql`
     userVacantDocuments: String
     commentaries: String
   }
+  enum DocumentType {
+    CC
+    NIT
+  }
+  enum RoleType {
+    ADMIN
+    CANDIDATE
+  }
   input UserCreateInput {
-    email: String
-    name: String
-    surname: String
-    document: String
-    documentType: String
-    phone: String
-    role: String
-    photoUri: String
+    email: String!
+    name: String!
+    surname: String!
+    document: String!
+    documentType: DocumentType!
+    phone: String!
+    role: RoleType!
+    photoUri: String!
+  }
+  input UserUpdateInput {
+    name: String!
+    surname: String!
+    document: String!
+    documentType: DocumentType!
+    phone: String!
+    photoUri: String!
   }
   type Query {
     indexUsers: [User]
@@ -35,7 +51,7 @@ const UserTypes = gql`
   }
   type Mutation {
     storeUser(data: UserCreateInput): User
-    updateUser(id: String, data: UserCreateInput): User
+    updateUser(id: String, data: UserUpdateInput): User
     deleteUser(id: String): User
   }
 `;

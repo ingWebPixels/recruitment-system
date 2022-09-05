@@ -1,6 +1,24 @@
 import prisma from "@config/prisma";
 import { Resolver } from "types";
 
+const transformData = (args: any) => ({
+  data: {
+    name: args.data.name,
+    surname: args.data.surname,
+    email: args.data.email,
+    phone: args.data.phone,
+    photoUri: args.data.photoUri,
+    document: args.data.document,
+    documentType: args.data.documentType,
+  },
+});
+
+const wherePk = (args: any) => ({
+  where: {
+    id: args.id,
+  },
+});
+
 const UserResolvers: Resolver = {
   User: {},
   Query: {
@@ -17,65 +35,37 @@ const UserResolvers: Resolver = {
       parent: any,
       args: {
         data: {
-          name: any;
-          surname: any;
-          email: any;
-          phone: any;
-          photoUri: any;
-          document: any;
-          documentType: any;
-          role: any;
+          name: String;
+          surname: String;
+          email: String;
+          phone: String;
+          photoUri: String;
+          document: String;
+          documentType: String;
+          role: String;
         };
       }
-    ) =>
-      await prisma.user.create({
-        data: {
-          name: args.data.name,
-          surname: args.data.surname,
-          email: args.data.email,
-          phone: args.data.phone,
-          photoUri: args.data.photoUri,
-          document: args.data.document,
-          documentType: args.data.documentType,
-          role: args.data.role,
-        },
-      }),
+    ) => await prisma.user.create(transformData(args)),
     updateUser: async (
       parent: any,
       args: {
-        id: any;
+        id: String;
         data: {
-          name: any;
-          surname: any;
-          email: any;
-          phone: any;
-          photoUri: any;
-          document: any;
-          documentType: any;
+          name: String;
+          surname: String;
+          phone: String;
+          photoUri: String;
+          document: String;
+          documentType: DocumentType;
         };
       }
-    ) => {
-      return await prisma.user.update({
-        where: {
-          id: args.id,
-        },
-        data: {
-          name: args.data.name,
-          surname: args.data.surname,
-          email: args.data.email,
-          phone: args.data.phone,
-          photoUri: args.data.photoUri,
-          document: args.data.document,
-          documentType: args.data.documentType,
-        },
-      });
-    },
-    deleteUser: async (parent: any, args: { id: any }) =>
-      await prisma.user.delete({
-        where: {
-          id: args.id,
-        },
+    ) =>
+      await prisma.user.update({
+        where: wherePk(args).where,
+        data: transformData(args).data,
       }),
+    deleteUser: async (parent: any, args: { id: String }) =>
+      await prisma.user.delete(wherePk(args)),
   },
 };
 

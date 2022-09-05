@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.menu-item {
+    @apply menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52;
+}

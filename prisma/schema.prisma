@@ -42,9 +42,37 @@ enum InterviewType {
   VIRTUAL
 }
 
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 model User {
   id                   String                @id @default(cuid())
   email                String                @unique @db.VarChar(100)
+  emailVerified        DateTime?
   name                 String                @db.VarChar(100)
   surname              String                @db.VarChar(100)
   document             String                @db.VarChar(16)
@@ -57,24 +85,26 @@ model User {
   vacancies            UsersOnVacancies[]
   createdAt            DateTime?             @default(now())
   updatedAt            DateTime?             @updatedAt
-  vacants               Vacant[]
+  vacants              Vacant[]
   userVacantDocuments  UserVacantDocuments[]
   commentaries         Commentaries[]
+  accounts             Account[]
+  sessions             Session[]
 }
 
 model Vacant {
   id                  String                @id @default(cuid())
   jobTitle            JobTitle              @relation(fields: [jobTitleId], references: [id])
-  jobTitleId        String
-  maxCandidaties     Int
-  minSalary          Float
-  maxSalary          Float
-  initDate           DateTime?
-  contractType       String?               @db.VarChar(14)
-  createdBy           User?                 @relation(fields: [createdById], references: [id])
-  createdById          String?
-  createdAt          DateTime?             @default(now())
-  updatedAt          DateTime?             @updatedAt
+  jobTitleId          String
+  maxCandidaties      Int
+  minSalary           Float
+  maxSalary           Float
+  initDate            DateTime?
+  contractType        String?               @db.VarChar(14)
+  createdBy           User?                @relation(fields: [createdById], references: [id])
+  createdById         String?
+  createdAt           DateTime?             @default(now())
+  updatedAt           DateTime?             @updatedAt
   users               UsersOnVacancies[]
   documents           Document[]
   userVacantDocuments UserVacantDocuments[]
@@ -86,50 +116,50 @@ model JobTitle {
   name        String    @db.VarChar(100)
   description String
   vacants     Vacant[]
-  createdAt  DateTime? @default(now())
-  updatedAt  DateTime? @updatedAt
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
 }
 
 model Document {
   id                  String                @id @default(cuid())
-  vacant              Vacant                @relation(fields: [vacantId], references: [id])
-  vacantId           String
+  vacant              Vacant                @relation(fields: [vacantId], references: [id], onDelete: Cascade)
+  vacantId            String
   type                AttachedType
   name                String                @db.VarChar(100)
   description         String
-  createdAt          DateTime?             @default(now())
-  updatedAt          DateTime?             @updatedAt
+  createdAt           DateTime?             @default(now())
+  updatedAt           DateTime?             @updatedAt
   userVacantDocuments UserVacantDocuments[]
 }
 
 model UsersOnVacancies {
   id         String                @id @default(cuid())
-  user       User                  @relation(fields: [userId], references: [id])
-  userId    String
+  user       User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
   vacant     Vacant                @relation(fields: [vacantId], references: [id])
-  vacantId  String
+  vacantId   String
   status     VacantStatus          @default(PENDING)
   documents  UserVacantDocuments[]
   interviews Interview[]
-  createdAt DateTime?             @default(now())
-  updatedAt DateTime?             @updatedAt
+  createdAt  DateTime?             @default(now())
+  updatedAt  DateTime?             @updatedAt
 
   @@unique([userId, vacantId])
 }
 
 model UserVacantDocuments {
   id                 String            @id @default(cuid())
-  user               User              @relation(fields: [userId], references: [id])
-  userId            String
-  vacant             Vacant            @relation(fields: [vacantId], references: [id])
-  vacantId          String
-  document           Document          @relation(fields: [documentId], references: [id])
-  documentId        String
+  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             String
+  vacant             Vacant            @relation(fields: [vacantId], references: [id], onDelete: Cascade)
+  vacantId           String
+  document           Document          @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  documentId         String
   uri                String?
-  defaultUri        String?
-  createdAt         DateTime?         @default(now())
-  updatedAt         DateTime?         @updatedAt
-  UsersOnVacancies   UsersOnVacancies? @relation(fields: [usersOnVacanciesId], references: [id])
+  defaultUri         String?
+  createdAt          DateTime?         @default(now())
+  updatedAt          DateTime?         @updatedAt
+  UsersOnVacancies   UsersOnVacancies? @relation(fields: [usersOnVacanciesId], references: [id], onDelete: Cascade)
   usersOnVacanciesId String?
 
   @@unique([userId, vacantId, documentId])
@@ -137,37 +167,37 @@ model UserVacantDocuments {
 
 model Interview {
   id             String              @id @default(cuid())
-  userVacant     UsersOnVacancies    @relation(fields: [userVacantId], references: [id])
-  userVacantId String
+  userVacant     UsersOnVacancies    @relation(fields: [userVacantId], references: [id], onDelete: Cascade)
+  userVacantId   String
   users          UsersOnInterviews[]
   title          String              @db.VarChar(100)
   description    String
   location       String              @db.VarChar(255)
   type           InterviewType
-  initDate      DateTime
-  finalDate     DateTime
-  createdAt     DateTime?           @default(now())
-  updatedAt     DateTime?           @updatedAt
-  commentaries    Commentaries[]
+  initDate       DateTime
+  finalDate      DateTime
+  createdAt      DateTime?           @default(now())
+  updatedAt      DateTime?           @updatedAt
+  commentaries   Commentaries[]
 }
 
 model UsersOnInterviews {
   id           String    @id @default(cuid())
-  interview    Interview @relation(fields: [interviewId], references: [id])
-  interviewId String
+  interview    Interview @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+  interviewId  String
   user         User      @relation(fields: [userId], references: [id])
-  userId      String
-  createdAt   DateTime? @default(now())
-  updatedAt   DateTime? @updatedAt
+  userId       String
+  createdAt    DateTime? @default(now())
+  updatedAt    DateTime? @updatedAt
 }
 
 model Commentaries {
   id           String    @id @default(cuid())
-  interview    Interview @relation(fields: [interviewId], references: [id])
-  interviewId String
+  interview    Interview @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+  interviewId  String
   user         User      @relation(fields: [userId], references: [id])
-  userId      String
+  userId       String
   value        String    @db.VarChar(255)
-  createdAt   DateTime? @default(now())
-  updatedAt   DateTime? @updatedAt
+  createdAt    DateTime? @default(now())
+  updatedAt    DateTime? @updatedAt
 }
