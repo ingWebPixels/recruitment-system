@@ -3,13 +3,9 @@ import { Resolver } from "types";
 
 const transformData = (args: any) => ({
   data: {
+    code: args.data.code,
     name: args.data.name,
-    surname: args.data.surname,
-    email: args.data.email,
-    phone: args.data.phone,
-    photoUri: args.data.photoUri,
-    document: args.data.document,
-    documentType: args.data.documentType,
+    description: args.data.description,
   },
 });
 
@@ -19,28 +15,28 @@ const wherePk = (args: any) => ({
   },
 });
 
-const UserResolvers: Resolver = {
-  User: {
+const JobTitleResolvers: Resolver = {
+  JobTitle: {
     vacancies: async (parent, args) =>
-      await prisma.usersOnVacancies.findMany({
+      await prisma.vacant.findMany({
         where: {
-          userId: {
+          jobTitleId: {
             equals: parent.id,
           },
         },
       }),
   },
   Query: {
-    indexUsers: async () => await prisma.user.findMany(),
-    showUser: async (parent: any, args: { id: any }) =>
-      await prisma.user.findUnique({
+    indexJobs: async () => await prisma.jobTitle.findMany(),
+    showJob: async (parent: any, args: { id: any }) =>
+      await prisma.jobTitle.findUnique({
         where: {
           id: args.id,
         },
       }),
   },
   Mutation: {
-    storeUser: async (
+    storeJob: async (
       parent: any,
       args: {
         data: {
@@ -54,8 +50,8 @@ const UserResolvers: Resolver = {
           role: String;
         };
       }
-    ) => await prisma.user.create(transformData(args)),
-    updateUser: async (
+    ) => await prisma.jobTitle.create(transformData(args)),
+    updateJob: async (
       parent: any,
       args: {
         id: String;
@@ -69,13 +65,13 @@ const UserResolvers: Resolver = {
         };
       }
     ) =>
-      await prisma.user.update({
+      await prisma.jobTitle.update({
         where: wherePk(args).where,
         data: transformData(args).data,
       }),
-    deleteUser: async (parent: any, args: { id: String }) =>
-      await prisma.user.delete(wherePk(args)),
+    deleteJob: async (parent: any, args: { id: String }) =>
+      await prisma.jobTitle.delete(wherePk(args)),
   },
 };
 
-export { UserResolvers };
+export { JobTitleResolvers };

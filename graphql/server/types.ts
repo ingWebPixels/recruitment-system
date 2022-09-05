@@ -1,10 +1,17 @@
-import { gql } from "apollo-server-micro";
 import { UserTypes } from "@graphql/server/users/types";
+import { UserVacantDocumentsTypes } from "@graphql/server/userVacantDocuments/types";
+import { UsersOnVacanciesTypes } from "@graphql/server/usersOnVacancies/types";
+import { JobTitleTypes } from "@graphql/server/jobTitles/types";
+import { DocumentTypes } from "@graphql/server/documents/types";
+import { VacantTypes } from "@graphql/server/vacancies/types";
 
-const globalTypes = gql`
-  scalar Date
-`;
-
-const GlobalTypes = [globalTypes, UserTypes];
+const GlobalTypes = [
+  UserTypes,
+  UserVacantDocumentsTypes,
+  UsersOnVacanciesTypes,
+  JobTitleTypes,
+  DocumentTypes,
+  VacantTypes,
+];
 
 export { GlobalTypes };

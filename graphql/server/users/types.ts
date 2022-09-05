@@ -10,13 +10,13 @@ const UserTypes = gql`
     documentType: DocumentType
     phone: String
     role: String
-    firstLogin: Date
+    firstLogin: String
     photoUri: String
-    createdAt: Date
-    updatedAt: Date
+    createdAt: String
+    updatedAt: String
     interviews: String
-    vacancies: String
-    userVacantDocuments: String
+    vacancies: [Vacant]
+    userVacantDocuments: [UserVacantDocument]
     commentaries: String
   }
   enum DocumentType {
@@ -47,7 +47,7 @@ const UserTypes = gql`
   }
   type Query {
     indexUsers: [User]
-    showUser(email: String): User
+    showUser(id: String): User
   }
   type Mutation {
     storeUser(data: UserCreateInput): User

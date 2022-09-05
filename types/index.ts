@@ -13,8 +13,3 @@ export interface Resolver {
   Mutation: ResolverFunction;
   [key: string]: ResolverFunction;
 }
-
-export type ParsedFormData = Record<
-  string,
-  string | File | number | boolean | { file: File; id: string }
->;
