@@ -6,6 +6,10 @@ System to support the recruitment of new personnel in companies
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
+#### Schema
+
+![all tests](documentation/Schema_Recruting.png)
+
 ### DEMO
 
 The demo version is available at https://www.pixelsweb.ml/api/graphql
@@ -71,7 +75,7 @@ It is only link your repository with vercel and the deployment will be done auto
 - **[Juan Zea](https://github.com/JuanZea)**
 - **[Alejandro Ciro](https://github.com/alejociro)**
 - **[David Mejía](https://github.com/DMRmejiar)**
-- **[Andrés Vásqiez](https://github.com/vasquezsre)**
+- **[Andrés Vásquez](https://github.com/vasquezsre)**
 
 ## License
 
