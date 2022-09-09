@@ -11,7 +11,7 @@ const UserTypes = gql`
     phone: String
     role: String
     firstLogin: String
-    photoUri: String
+    image: String
     createdAt: String
     updatedAt: String
     interviews: String
@@ -35,7 +35,7 @@ const UserTypes = gql`
     documentType: DocumentType!
     phone: String!
     role: RoleType!
-    photoUri: String!
+    image: String!
   }
   input UserUpdateInput {
     name: String!
@@ -43,7 +43,7 @@ const UserTypes = gql`
     document: String!
     documentType: DocumentType!
     phone: String!
-    photoUri: String!
+    image: String!
   }
   type Query {
     indexUsers: [User]

@@ -80,7 +80,7 @@ model User {
   phone                String?               @db.VarChar(14)
   role                 Role                  @default(CANDIDATE)
   firstLogin           DateTime?
-  photoUri             String?
+  image             String?
   interviews           UsersOnInterviews[]
   vacancies            UsersOnVacancies[]
   createdAt            DateTime?             @default(now())

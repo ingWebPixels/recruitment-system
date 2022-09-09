@@ -1,5 +1,5 @@
-import prisma from "@config/prisma";
-import { Resolver } from "types";
+import prisma from '@config/prisma';
+import { Resolver } from 'types';
 
 const transformData = (args: any) => ({
   data: {
@@ -44,7 +44,7 @@ const JobTitleResolvers: Resolver = {
           surname: String;
           email: String;
           phone: String;
-          photoUri: String;
+          image: String;
           document: String;
           documentType: String;
           role: String;
@@ -59,7 +59,7 @@ const JobTitleResolvers: Resolver = {
           name: String;
           surname: String;
           phone: String;
-          photoUri: String;
+          image: String;
           document: String;
           documentType: DocumentType;
         };
