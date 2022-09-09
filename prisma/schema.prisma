@@ -87,7 +87,7 @@ model User {
   updatedAt            DateTime?             @updatedAt
   vacants              Vacant[]
   userVacantDocuments  UserVacantDocuments[]
-  commentaries         Commentaries[]
+  commentaries         Commentary[]
   accounts             Account[]
   sessions             Session[]
 }
@@ -178,7 +178,7 @@ model Interview {
   finalDate      DateTime
   createdAt      DateTime?           @default(now())
   updatedAt      DateTime?           @updatedAt
-  commentaries   Commentaries[]
+  commentaries   Commentary[]
 }
 
 model UsersOnInterviews {
@@ -191,7 +191,7 @@ model UsersOnInterviews {
   updatedAt    DateTime? @updatedAt
 }
 
-model Commentaries {
+model Commentary {
   id           String    @id @default(cuid())
   interview    Interview @relation(fields: [interviewId], references: [id], onDelete: Cascade)
   interviewId  String
