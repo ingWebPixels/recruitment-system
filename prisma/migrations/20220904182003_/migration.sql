@@ -27,7 +27,7 @@ CREATE TABLE "User" (
     "phone" VARCHAR(14),
     "role" "Role" NOT NULL DEFAULT 'CANDIDATE',
     "firstLogin" TIMESTAMP(3),
-    "photoUri" TEXT,
+    "image" TEXT,
     "createdAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3),
 

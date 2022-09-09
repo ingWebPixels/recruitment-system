@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint  pages/**",
-    "lint:fix": "eslint --fix  pages/**"
+    "lint:fix": "eslint --fix  pages/**",
+    "format": "npx prettier --write pages/**",
+    "format:fix": "npx prettier --watch pages/**"
   },
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.4",

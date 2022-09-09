@@ -1,10 +1,10 @@
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn, signOut } from 'next-auth/react';
 
 const Header = () => {
   const { data: session } = useSession();
   const handleSignIn = (e: any) => {
     e.preventDefault();
-    signIn("auth0");
+    signIn('auth0');
   };
   const handleSignOut = (e: any) => {
     e.preventDefault();
@@ -12,25 +12,25 @@ const Header = () => {
   };
 
   return (
-    <div className="navbar text-white bg-gray-800">
-      <div className="navbar-center">
-        <a className="btn btn-ghost normal-case text-xl font-bold">PIXELS</a>
+    <div className='navbar text-white bg-gray-800'>
+      <div className='navbar-center'>
+        <a className='btn btn-ghost normal-case text-xl font-bold'>PIXELS</a>
       </div>
-      <div className="navbar-end justify-end w-full">
+      <div className='navbar-end justify-end w-full'>
         {session && (
           <button
-            type="button"
+            type='button'
             onClick={handleSignOut}
-            className="btn text-white"
+            className='btn text-white'
           >
             Cerrar sesión
           </button>
         )}
         {!session && (
           <button
-            type="button"
+            type='button'
             onClick={handleSignIn}
-            className="btn text-white"
+            className='btn text-white'
           >
             Iniciar sesión
           </button>
