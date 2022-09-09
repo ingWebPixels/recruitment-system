@@ -74,13 +74,13 @@ model User {
   email                String                @unique @db.VarChar(100)
   emailVerified        DateTime?
   name                 String                @db.VarChar(100)
-  surname              String                @db.VarChar(100)
-  document             String                @db.VarChar(16)
+  surname              String?                @db.VarChar(100)
+  document             String?                @db.VarChar(16)
   documentType         DocumentType          @default(CC)
   phone                String?               @db.VarChar(14)
   role                 Role                  @default(CANDIDATE)
   firstLogin           DateTime?
-  image             String?
+  image                String?
   interviews           UsersOnInterviews[]
   vacancies            UsersOnVacancies[]
   createdAt            DateTime?             @default(now())

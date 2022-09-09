@@ -1,11 +1,10 @@
-import { gql } from "apollo-server-micro";
+import { gql } from 'apollo-server-micro';
 
 const UserTypes = gql`
   type User {
     id: ID
     email: String
     name: String
-    surname: String
     document: String
     documentType: DocumentType
     phone: String
@@ -30,8 +29,8 @@ const UserTypes = gql`
   input UserCreateInput {
     email: String!
     name: String!
-    surname: String!
-    document: String!
+    surname: String
+    document: String
     documentType: DocumentType!
     phone: String!
     role: RoleType!
@@ -39,8 +38,8 @@ const UserTypes = gql`
   }
   input UserUpdateInput {
     name: String!
-    surname: String!
-    document: String!
+    surname: String
+    document: String
     documentType: DocumentType!
     phone: String!
     image: String!
