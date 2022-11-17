@@ -29,6 +29,18 @@ const UserResolvers: Resolver = {
           },
         },
       }),
+    roles: async (parent, args) =>
+      await prisma.role.findMany({
+        where: {
+          users: {
+            some: {
+              id: {
+                equals: parent.id,
+              },
+            },
+          },
+        },
+      }),
   },
   Query: {
     indexUsers: async () => await prisma.user.findMany(),

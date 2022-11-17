@@ -1,20 +1,45 @@
-import type { NextPage } from 'next';
-import Head from 'next/head';
-import Header from '@components/Header';
+import { matchRoles } from '@utils/matchRoles';
+import { GetServerSidePropsContext } from 'next';
+import Link from 'next/link';
+import React from 'react';
 
-const Home: NextPage = () => (
-  <>
-    <Head>
-      <title>Sistema de contrataciones PIXELS</title>
-      <meta name='description' content='Sistema de contrataciones PIXELS' />
-    </Head>
-    <div className='flex flex-col min-h-screen w-full items-center bg-gray-100'>
-      <Header />
-      <div className='flex flex-col justify-center flex-1 items-center bg-gray-100'>
-        <h1 className='text-2xl font-bold'>Sistema de contrataciones PIXELS</h1>
-      </div>
-    </div>
-  </>
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { roleCheck, isPublic, name } = await matchRoles({ context });
+
+  if (isPublic) {
+    return {
+      props: {
+        name,
+      },
+    };
+  }
+
+  if (!roleCheck) {
+    return {
+      redirect: {
+        destination: '/unauthorized',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      name,
+    },
+  };
+}
+
+const IndexPage = () => (
+  <div className='flex flex-col'>
+    <span>Esto es una pagina publica</span>
+    <Link href='/transactions'>
+      <a>Ir a la pagina de transacciones</a>
+    </Link>
+    <Link href='/admin'>
+      <a>Ir a la pagina de admin</a>
+    </Link>
+  </div>
 );
 
-export default Home;
+export default IndexPage;
